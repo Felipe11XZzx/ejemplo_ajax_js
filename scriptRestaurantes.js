@@ -10,20 +10,34 @@ btn.addEventListener("click", peticionAsyncAwait);
 
 async function peticionAsyncAwait() {
   try {
-    // Esto se deberua hacer asincrono:
-    const response1 = await fetch(CATEGORIES_URL);
-    const categories = await response1.json();
-    const response2 = await fetch(DISHES_URL);
-    const dishes = await response2.json();
-    const response3 = await fetch(RESTAURANTS_URL);
-    const restaurants = await response3.json();
-    // Aqui deberia hacerse sincrono:
+    // Ejecutar todas las peticiones en paralelo ("En modo Asíncrono").
+    const [response1, response2, response3] = await Promise.all([
+      fetch(CATEGORIES_URL),
+      fetch(DISHES_URL),
+      fetch(RESTAURANTS_URL),
+    ]);
+
+    // Convertir las respuestas a JSON de forma Asincrona ("En modo Asíncrono").
+    const [categories, dishes, restaurants] = await Promise.all([
+      response1.json(),
+      response2.json(),
+      response3.json(),
+    ]);
+
+    // Función que se ejecuta de forma sincrona para visualizar los platos.
     mostrarPlatos(categories, dishes, restaurants);
+    /*
+    const respose = await fetch("https://jsonplaceholder.typicode.com/users");
+    const users = await respose.json();
+    mostrarDatos(users);*/
   } catch (error) {
     console.log(error);
+  } finally {
+    console.log("Proceso finalizado correctamente");
   }
 }
 
+/*
 fetch(DISHES_URL)
   .then((response) => {
     return response.json(); // no olvidar el return si hay llaves en la función
@@ -49,6 +63,7 @@ fetch(DISHES_URL)
           });
       });
   });
+  */
 
 function mostrarPlatos(categories, dishes, restaurants) {
   dishes.forEach((dish) => {
