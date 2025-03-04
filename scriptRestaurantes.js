@@ -26,6 +26,8 @@ async function peticionAsyncAwait() {
 
     // Función que se ejecuta de forma sincrona para visualizar los platos.
     mostrarPlatos(categories, dishes, restaurants);
+
+    // Codigo anterior donde se implementa el uso de "fetch" de forma secuencial .
     /*
     const respose = await fetch("https://jsonplaceholder.typicode.com/users");
     const users = await respose.json();
@@ -37,6 +39,29 @@ async function peticionAsyncAwait() {
   }
 }
 
+function mostrarPlatos(categories, dishes, restaurants) {
+  dishes.forEach((dish) => {
+    dish.categoria = categories.find(
+      ({ categoriaID: id }) => id === dish.categoriaID
+    ).categoria;
+    dish.restaurante = restaurants.find(
+      ({ restauranteID: id }) => id === dish.restauranteID
+    ).restaurante;
+  });
+  const contenedor = document.querySelector("#datos");
+  let html = "";
+  dishes.forEach(({ plato, descripcion, precio, categoria, restaurante }) => {
+    html += `
+        <h3>${plato}</h3>
+        <p>Descripción: ${descripcion || "-"}</p>
+        <p>Precio: ${precio} <br/> Categoria: ${categoria} <br/> Restaurante: ${restaurante}</p>
+        <hr>
+      `;
+  });
+  contenedor.innerHTML = html;
+}
+
+// Codigo anterior donde se implementa el uso de "fetch" de forma secuencial .
 /*
 fetch(DISHES_URL)
   .then((response) => {
@@ -64,25 +89,3 @@ fetch(DISHES_URL)
       });
   });
   */
-
-function mostrarPlatos(categories, dishes, restaurants) {
-  dishes.forEach((dish) => {
-    dish.categoria = categories.find(
-      ({ categoriaID: id }) => id === dish.categoriaID
-    ).categoria;
-    dish.restaurante = restaurants.find(
-      ({ restauranteID: id }) => id === dish.restauranteID
-    ).restaurante;
-  });
-  const contenedor = document.querySelector("#datos");
-  let html = "";
-  dishes.forEach(({ plato, descripcion, precio, categoria, restaurante }) => {
-    html += `
-        <h3>${plato}</h3>
-        <p>Descripción: ${descripcion || "-"}</p>
-        <p>Precio: ${precio} <br/> Categoria: ${categoria} <br/> Restaurante: ${restaurante}</p>
-        <hr>
-      `;
-  });
-  contenedor.innerHTML = html;
-}
